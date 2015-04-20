@@ -1,6 +1,14 @@
 # JobPostFeeder
 
-Retrieve job postings from Dice.com and show as JSON objects.
+Retrieve job postings from Dice.com and show as JSON objects.  
+
+You can search for job postings with the keys like:  
+* skill
+* zip code
+* key words in job description
+* age of posting in days
+  
+The information about job postings such as company names and titles are returned in the JSON format. Each line has a single JSON object. 
 
 ### How to run
 On Linux, go to the jobs directory and run `./jobs.py`  
@@ -32,3 +40,14 @@ If it complains that you don't have BeautifulSoup, run
   don't get detail job description; return the URL instead  
 * `-d, --direct`  
   return direct hire jobs only.  
+  
+### Returned data
+<table>
+<tr><th>property</th><th>description</th></tr>
+<tr><td>company</td><td>company or recuriter's name</td></tr>
+<tr><td>postdate</td><td>the date of post</td></tr>
+<tr><td>title</td><td>job title</td></tr>
+<tr><td>location</td><td>location of the position</td></tr>
+<tr><td>description</td><td>the detailed description about the position</td></tr>
+<tr><td>posturl</td><td>the url to the job posting</td></tr>
+</table>
