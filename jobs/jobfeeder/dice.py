@@ -6,7 +6,7 @@
 
 import urllib
 import json
-import urllib
+from contextlib import closing
 from bs4 import BeautifulSoup
 
 from consts import idx_company
@@ -139,9 +139,8 @@ class DiceFeeder(object):
         self._next_doc = 0
 
     def _load_next(self):
-        f_dice = urllib.urlopen(self._next_url)
-        self._top_json = json.load(f_dice)
-        f_dice.close()
+        with closing(urllib.urlopen(self._next_url)) as f_dice:
+            self._top_json = json.load(f_dice)
 
         if 'nextUrl' in self._top_json:
             self._next_url = host_url + self._top_json['nextUrl']
