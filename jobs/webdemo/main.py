@@ -11,12 +11,36 @@ app = Flask(__name__)
 app.config.from_pyfile('democonfig.py')
 
 
-entries = [ {'city':'Chelmsford', 'n_pos':0} ]
+class FormData(object):
+    def __init__(self):
+        self._entries = []
+        self._keywords = {'skill':'', 'keyword':'', 'zipcode':'', 'age':''}
+
+    def set_entry(self, city_pos):
+        self._entries = city_pos
+
+    def get_entries(self):
+        entries = []
+        for city, n_pos in self._entries:
+            entries.append( {'city':city, 'n_pos':n_pos} )
+        return entries
+
+    def set_keywords(self, skill=None, keyword=None, zipcode=None, age=None):
+        if skill is None:
+            skill = ''
+        if keyword is None:
+            keyword = ''
+        self._keywords = {'skill':skill, 'keyword':keyword,
+                'zipcode':zipcode, 'age':age}
+
+    def get_keywords(self):
+        return self._keywords
+
+formdata = FormData()
+
+
 def test_callback(skill=None, keyword=None, zipcode=None, age=None):
-    if entries[0]['city'] == 'Chelmsford':
-        return [('Boston', 32)]
-    else:
-        return [('Chelmsford', 0)]
+    return [('Chelmsford', 0)]
 
 cb = test_callback
 
@@ -31,7 +55,9 @@ def start():
 
 @app.route('/')
 def show_entries():
-    return render_template('layout.html', entries=entries)
+    return render_template('layout.html',
+            entries=formdata.get_entries(),
+            searchwords=formdata.get_keywords())
 
 @app.route('/search_jobs', methods=['POST'])
 def search_jobs():
@@ -48,17 +74,17 @@ def search_jobs():
             key_ = request.form['keyword']
             if key_ == '':
                 key_ = None
-            age_int = int(request.form['age'])
+            zip_ = request.form['zipcode']
+            age_ = int(request.form['age'])
 
             city_pos = cb(
                     skill = skill_,
                     keyword = key_,
-                    zipcode = request.form['zipcode'],
-                    age = age_int )
+                    zipcode = zip_,
+                    age = age_ )
+            formdata.set_entry(city_pos)
 
-            entries = []
-            for city, n_pos in city_pos:
-                entries.append( {'city':city, 'n_pos':n_pos} )
+            formdata.set_keywords(skill_, key_, zip_, age_)
         except ValueError:
             flash('Age must be a number')
 

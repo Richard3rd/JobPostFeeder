@@ -1,3 +1,4 @@
 body            { font-family: sans-serif; background: #eee; }
 .flash          { background: #cee5F5; padding: 0.5em;
                   border: 1px solid #aacbe2; }
+.search_label	{ float: left; width: 6em; }

@@ -10,18 +10,17 @@
 <div class="flash">{{ message }}</div>
 {% endfor %}
 <form action="{{ url_for('search_jobs') }}" method="post" class="search-jobs">
-  <dl>
-    <dt>Skill:
-    <dd><input type="text" size="30" name="skill">
-    <dt>Key word:
-    <dd><input type="text" size="30" name="keyword">
-    <dt>Zip code:
-    <dd><input type="text" size="30" name="zipcode">
-    <dt>Age:
-    <dd><input type="text" size="30" name="age">
-    <dd><input type="submit" value="submit">
-  </dl>
-<div id="regions_div" style="width: 900px; height: 600px;"></div>
+  <span class="search_label">Skill:</span>
+  <input type="text" size="30" name="skill" value="{{ searchwords.skill }}"><br>
+  <span class="search_label">Key word:</span>
+  <input type="text" size="30" name="keyword" value="{{ searchwords.keyword }}"><br>
+  <span class="search_label">Zip code:</span>
+  <input type="text" size="30" name="zipcode" value="{{ searchwords.zipcode }}"><br>
+  <span class="search_label">Age:</span>
+  <input type="text" size="30" name="age" value="{{ searchwords.age }}"><br>
+  <input type="submit" value="submit">
+</form>
+<div id="regions_div" style="width: 900px; height: 500px;"></div>
 <script type='text/javascript'>//<![CDATA[ 
 
       google.setOnLoadCallback(drawRegionsMap);
@@ -39,7 +38,7 @@
 
           var options = {'region':'US-MA',
                          'displayMode': 'markers',
-                         'resolution': 'metros'};
+                         'resolution': 'provinces'};
 
         var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
 
