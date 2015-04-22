@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+<title>Job Feeder Demo</title>
+<link rel='stylesheet' type='text/css' href="{{ url_for('static', filename='style.css') }}">
+<script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1.1','packages':['geochart']}]}"></script>
+</head>
+<body>
+{% for message in get_flashed_messages() %}
+<div class="flash">{{ message }}</div>
+{% endfor %}
+<form action="{{ url_for('search_jobs') }}" method="post" class="search-jobs">
+  <dl>
+    <dt>Skill:
+    <dd><input type="text" size="30" name="skill">
+    <dt>Key word:
+    <dd><input type="text" size="30" name="keyword">
+    <dt>Zip code:
+    <dd><input type="text" size="30" name="zipcode">
+    <dt>Age:
+    <dd><input type="text" size="30" name="age">
+    <dd><input type="submit" value="submit">
+  </dl>
+<div id="regions_div" style="width: 900px; height: 600px;"></div>
+<script type='text/javascript'>//<![CDATA[ 
+
+      google.setOnLoadCallback(drawRegionsMap);
+
+      function drawRegionsMap() {
+
+        var data = google.visualization.arrayToDataTable([
+          ['City', 'Positions']
+          {% for entry in entries %}
+            ,["{{ entry.city }}", {{ entry.n_pos }}]
+          {% else %}
+            ,['Chelmsford', 0]
+          {% endfor %}
+        ]);
+
+          var options = {'region':'US-MA',
+                         'displayMode': 'markers',
+                         'resolution': 'metros'};
+
+        var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+
+        chart.draw(data, options);
+      }
+//]]>  
+
+</script>
+</body>
+</html>
