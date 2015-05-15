@@ -51,3 +51,7 @@ If it complains that you don't have BeautifulSoup, run
 <tr><td>description</td><td>the detailed description about the position</td></tr>
 <tr><td>posturl</td><td>the url to the job posting</td></tr>
 </table>
+
+### Reference
+* Dice jobsearch API  
+  http://www.dice.com/common/content/util/apidoc/jobsearch.html
