@@ -4,20 +4,20 @@ There are two scripts: demo.py and jobs.py
 
 ## demo.py
 
-Retrieve job postings from Dice.com and show how many job postings in cities/towns.  
+Retrieve job postings from Dice.com and show how many job postings for each cities/town in a browser.  
 
 #### How to run
 On Linux, go to the jobs directory and run `./demo.py`  
   
 On Windows,  
-``>python jobs.py -k "big data" -z 02140 -a 7 -S age -D -n``
+``>python ./demo.py``
   
-If it complains that you don't have BeautifulSoup, run
+If it complains that you don't have BeautifulSoup and/or Flask, run
 ``pip install -r requirements.txt``
-
-
+  
+  
 ## jobs.py
-
+  
 Retrieve job postings from Dice.com and show as JSON objects.  
 
 You can search for job postings with the keys like:  
