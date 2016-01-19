@@ -1,5 +1,23 @@
 # JobPostFeeder
 
+There are two scripts: demo.py and jobs.py  
+
+## demo.py
+
+Retrieve job postings from Dice.com and show how many job postings for each cities/town in a browser.  
+
+#### How to run
+On Linux, go to the jobs directory and run `./demo.py`  
+  
+On Windows,  
+``>python ./demo.py``
+  
+If it complains that you don't have BeautifulSoup and/or Flask, run
+``pip install -r requirements.txt``
+  
+  
+## jobs.py
+  
 Retrieve job postings from Dice.com and show as JSON objects.  
 
 You can search for job postings with the keys like:  
@@ -10,7 +28,7 @@ You can search for job postings with the keys like:
   
 The information about job postings such as company names and titles are returned in the JSON format. Each line has a single JSON object. 
 
-### How to run
+#### How to run
 On Linux, go to the jobs directory and run `./jobs.py`  
 ex)  
 ``$ ./jobs.py -k "big data" -z 02140 -a 7 -S age -D -n``
@@ -18,10 +36,10 @@ ex)
 On Windows,  
 ``>python jobs.py -k "big data" -z 02140 -a 7 -S age -D -n``
   
-If it complains that you don't have BeautifulSoup, run
+If it complains that you don't have BeautifulSoup and/or Flask, run
 ``pip install -r requirements.txt``
   
-### Command line options
+#### Command line options
 * `-h, --help`  
    show the help messagne and quit  
 * `-k KEYWORD [KEYWORD ...], --keyword KEYWORD [KEYWORD ...]`  
@@ -41,7 +59,7 @@ If it complains that you don't have BeautifulSoup, run
 * `-d, --direct`  
   return direct hire jobs only.  
   
-### Returned data
+#### Returned data
 <table>
 <tr><th>property</th><th>description</th></tr>
 <tr><td>company</td><td>company or recuriter's name</td></tr>
@@ -51,3 +69,7 @@ If it complains that you don't have BeautifulSoup, run
 <tr><td>description</td><td>the detailed description about the position</td></tr>
 <tr><td>posturl</td><td>the url to the job posting</td></tr>
 </table>
+
+#### Reference
+* Dice jobsearch API  
+  http://www.dice.com/common/content/util/apidoc/jobsearch.html
