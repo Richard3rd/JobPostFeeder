@@ -1,53 +1,107 @@
 <!doctype html>
 <html>
 <head>
-<title>Job Feeder Demo</title>
-<link rel='stylesheet' type='text/css' href="{{ url_for('static', filename='style.css') }}">
-<script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1.1','packages':['geochart']}]}"></script>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Job Feeder Demo</title>
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+  <link rel='stylesheet' type='text/css' href="{{ url_for('static', filename='style.css') }}">
+  <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1.1','packages':['geochart']}]}"></script>
 </head>
 <body>
-{% for message in get_flashed_messages() %}
-<div class="flash">{{ message }}</div>
-{% endfor %}
-<form action="{{ url_for('search_jobs') }}" method="post" class="search-jobs">
-  <span class="search_label">Skill:</span>
-  <input type="text" size="30" name="skill" value="{{ searchwords.skill }}"><br>
-  <span class="search_label">Key word:</span>
-  <input type="text" size="30" name="keyword" value="{{ searchwords.keyword }}"><br>
-  <span class="search_label">Zip code:</span>
-  <input type="text" size="30" name="zipcode" value="{{ searchwords.zipcode }}"><br>
-  <span class="search_label">Age:</span>
-  <input type="text" size="30" name="age" value="{{ searchwords.age }}"><br>
-  <input type="submit" value="submit">
-</form>
-<div id="regions_div" style="width: 900px; height: 500px;"></div>
-<script type='text/javascript'>//<![CDATA[ 
+  <header class="jumbotron">
+    <div class="container">
+      <div class="row row-header">
+        <div class="col-xs-12 col-sm-8">
+          <h1>Where are Jobs</h1>
+        </div>
+      </div>
+    </div>
+  </header>
 
-      google.setOnLoadCallback(drawRegionsMap);
+  <div class="container">
+    {% for message in get_flashed_messages() %}
+    <div class="row">
+      <div class="col-sm-12 flash">{{ message }}</div>
+    </div>
+    {% endfor %}
+    <div class="row row-content">
+      <div class="col-xs-12">
+        <form action="{{ url_for('search_jobs') }}" method="post" class="form-horizontal" role="form">
+          <div class="form-group">
+            <label for="skill" class="col-sm-2 control-label">Skill:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="skill" name="skill" value="{{ searchwords.skill }}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="keyword" class="col-sm-2 control-label">Key word:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="keyword" name="keyword" value="{{ searchwords.keyword }}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="zipcode" class="col-sm-2 control-label">Zip code:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="zipcode" name="zipcode" value="{{ searchwords.zipcode }}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="age" class="col-sm-2 control-label">Age:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="age" name="age" value="{{ searchwords.age }}"><br>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="row row-content">
+      <div class="col-sm-12 col-md-offset-2 col-md-10">
+        <div id="regions_div"></div>
+      </div>
+    </div>
+  </div>
 
-      function drawRegionsMap() {
+  <script type='text/javascript'>//<![CDATA[ 
 
-        var data = google.visualization.arrayToDataTable([
-          ['City', 'Positions']
-          {% for entry in entries %}
-            ,["{{ entry.city }}", {{ entry.n_pos }}]
-          {% else %}
+        google.setOnLoadCallback(drawRegionsMap);
+
+        function drawRegionsMap() {
+
+          var data = google.visualization.arrayToDataTable([
+            ['City', 'Positions']
+            {% for entry in entries %}
+              ,["{{ entry.city }}", {{ entry.n_pos }}]
+            {% else %}
             ,['Chelmsford', 0]
-          {% endfor %}
-        ]);
+            {% endfor %}
+          ]);
 
-          var options = {'region':'US-MA',
-                         'displayMode': 'markers',
-                         'resolution': 'provinces',
-                         'backgroundColor': '#81d4fa',
-          };
+            var options = {'region':'US-MA',
+                           'displayMode': 'markers',
+                           'resolution': 'provinces',
+                           'backgroundColor': '#81d4fa',
+            };
 
-        var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+          var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
 
-        chart.draw(data, options);
-      }
-//]]>  
+          chart.draw(data, options);
+        }
+  //]]>  
 
-</script>
+  </script>
+
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </body>
 </html>
