@@ -13,6 +13,9 @@ app.config.from_pyfile('democonfig.py')
 
 class FormData(object):
     def __init__(self):
+        self.reset()
+
+    def reset(self):
         self._entries = []
         self._keywords = {'skill':'', 'keyword':'', 'zipcode':'', 'age':''}
 
@@ -65,6 +68,7 @@ def search_jobs():
     if ((request.form['skill']=='' and request.form['keyword']=='')
             or request.form['zipcode']==''
             or request.form['age']==''):
+        formdata.reset()
         flash('Please enter all fields')
     else:
         try:
