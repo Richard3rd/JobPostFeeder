@@ -12,6 +12,26 @@ app.config.from_pyfile('democonfig.py')
 
 
 class FormData(object):
+    nextid = 0
+    datadict = {}
+
+    @classmethod
+    def createData(cls):
+        formdata = FormData()
+        dataid = cls.nextid
+        cls.nextid += 1
+        cls.datadict[dataid] = formdata
+        return dataid
+
+    @classmethod
+    def getData(cls, dataid):
+        return cls.datadict.get(dataid)
+
+    @classmethod
+    def deleteData(cls, dataid):
+        if dataid in cls.datadict:
+            del cls.datadict[dataid]
+        
     def __init__(self):
         self.reset()
 
@@ -39,13 +59,8 @@ class FormData(object):
     def get_keywords(self):
         return self._keywords
 
-formdata = FormData()
 
-
-def test_callback(skill=None, keyword=None, zipcode=None, age=None):
-    return [('Chelmsford', 0)]
-
-cb = test_callback
+cb = None
 
 def set_callback(callback):
     global cb
@@ -58,17 +73,26 @@ def start():
 
 @app.route('/')
 def show_entries():
-    return render_template('layout.html',
-            entries=formdata.get_entries(),
-            searchwords=formdata.get_keywords())
+    formdata = None
+    if 'formdata' in session:
+        dataid = session['formdata']
+        formdata = FormData.getData(dataid)
+
+    if formdata:
+        ent = formdata.get_entries()
+        swords = formdata.get_keywords()
+    else:
+        ent = [{'n_pos':0, 'city':'chelmsford, ma'}]
+        swords = {'skill':'', 'keyword':'', 'zipcode':'', 'age':''}
+    print 'ent={}, swords={}'.format(ent, swords)
+    return render_template('search.html',
+            entries=ent, searchwords=swords)
 
 @app.route('/search_jobs', methods=['POST'])
 def search_jobs():
-    global entries
     if ((request.form['skill']=='' and request.form['keyword']=='')
             or request.form['zipcode']==''
             or request.form['age']==''):
-        formdata.reset()
         flash('Please enter all fields')
     else:
         try:
@@ -86,9 +110,15 @@ def search_jobs():
                     keyword = key_,
                     zipcode = zip_,
                     age = age_ )
-            formdata.set_entry(city_pos)
 
+            dataid = FormData.createData()
+            formdata = FormData.getData(dataid)
+            formdata.set_entry(city_pos)
             formdata.set_keywords(skill_, key_, zip_, age_)
+
+            if 'formdata' in session:
+                FormData.deleteData(session['formdata'])
+            session['formdata'] = dataid
         except ValueError:
             flash('Age must be a number')
 

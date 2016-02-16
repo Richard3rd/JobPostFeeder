@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <div class="container">
+    <div class="row row-content">
+      {% for message in get_flashed_messages() %}
+      <div class="col-xs-12 col-sm-10 col-sm-offset-2">
+        <div class="alert alert-warning alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          {{ message }}
+        </div>
+      </div>
+      {% endfor %}
+      <div class="col-xs-12">
+        <form action="{{ url_for('search_jobs') }}" method="post" class="form-horizontal" role="form">
+          <div class="form-group">
+            <label for="skill" class="col-sm-2 control-label">Skill:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="skill" name="skill" value="{{ searchwords.skill }}" placeholder="ex) C++, Java, JavaScript, PHP, git">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="keyword" class="col-sm-2 control-label">Key word:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="keyword" name="keyword" value="{{ searchwords.keyword }}" placeholder="ex) data engineer, web developer, mobile">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="zipcode" class="col-sm-2 control-label">Zip code:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="zipcode" name="zipcode" value="{{ searchwords.zipcode }}" placeholder="01824">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="age" class="col-sm-2 control-label">Age:</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="age" name="age" value="{{ searchwords.age }}" placeholder="age of posting in days">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+              <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="row row-content">
+      <div class="col-sm-12">
+        <div id="regions_div" class="center-block"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type='text/javascript'>//<![CDATA[ 
+
+        google.setOnLoadCallback(drawRegionsMap);
+
+        function drawRegionsMap() {
+
+          var data = google.visualization.arrayToDataTable([
+            ['City', 'Positions']
+            {% for entry in entries %}
+              ,["{{ entry.city }}", {{ entry.n_pos }}]
+            {% else %}
+            ,['Chelmsford', 0]
+            {% endfor %}
+          ]);
+
+            var options = {'region':'US-MA',
+                           'displayMode': 'markers',
+                           'resolution': 'provinces',
+                           'backgroundColor': '#81d4fa',
+            };
+
+          var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+
+          chart.draw(data, options);
+        }
+  //]]>  
+
+  </script>
+{% endblock %}
