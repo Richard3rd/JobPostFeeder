@@ -56,6 +56,9 @@ target/
 # virtualenv
 venv/
 
+# local temporary directory to store files not included in repository
+temp/
+
 # vim
 *.swp
 *.swo
