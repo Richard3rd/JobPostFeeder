@@ -4,6 +4,8 @@
 @created Apr 21, 2015
 '''
 
+from collections import defaultdict
+import json
 from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
 
 
@@ -16,8 +18,12 @@ class FormData(object):
     datadict = {}
 
     @classmethod
-    def createData(cls):
-        formdata = FormData()
+    def factory(cls, *args):
+        '''
+        FormData factory class method
+        Args: skill, keyword, zipcode, age 
+        '''
+        formdata = FormData(*args)
         dataid = cls.nextid
         cls.nextid += 1
         cls.datadict[dataid] = formdata
@@ -32,29 +38,25 @@ class FormData(object):
         if dataid in cls.datadict:
             del cls.datadict[dataid]
         
-    def __init__(self):
-        self.reset()
+    def __init__(self, skill=None, keyword=None, zipcode=None, age=None):
+        feeder = cb(skill, keyword, zipcode, age)
+        city_pos_dict = defaultdict(int)
+        for raw_data in feeder:
+            data = json.loads(raw_data)
+            city_pos_dict[data['location'].lower()] += 1
+            print '{} {} {}'.format(data['location'], data['postdate'], data['title'])
+        self._entries = [{'city':city, 'n_pos':city_pos_dict[city]} for city in city_pos_dict]
+        # TODO feeder
 
-    def reset(self):
-        self._entries = []
-        self._keywords = {'skill':'', 'keyword':'', 'zipcode':'', 'age':''}
-
-    def set_entry(self, city_pos):
-        self._entries = city_pos
-
-    def get_entries(self):
-        entries = []
-        for city, n_pos in self._entries:
-            entries.append( {'city':city, 'n_pos':n_pos} )
-        return entries
-
-    def set_keywords(self, skill=None, keyword=None, zipcode=None, age=None):
         if skill is None:
             skill = ''
         if keyword is None:
             keyword = ''
         self._keywords = {'skill':skill, 'keyword':keyword,
                 'zipcode':zipcode, 'age':age}
+
+    def get_entries(self):
+        return self._entries
 
     def get_keywords(self):
         return self._keywords
@@ -84,7 +86,6 @@ def show_entries():
     else:
         ent = [{'n_pos':0, 'city':'chelmsford, ma'}]
         swords = {'skill':'', 'keyword':'', 'zipcode':'', 'age':''}
-    print 'ent={}, swords={}'.format(ent, swords)
     return render_template('search.html',
             entries=ent, searchwords=swords)
 
@@ -105,16 +106,8 @@ def search_jobs():
             zip_ = request.form['zipcode']
             age_ = int(request.form['age'])
 
-            city_pos = cb(
-                    skill = skill_,
-                    keyword = key_,
-                    zipcode = zip_,
-                    age = age_ )
-
-            dataid = FormData.createData()
+            dataid = FormData.factory(skill_, key_, zip_, age_)
             formdata = FormData.getData(dataid)
-            formdata.set_entry(city_pos)
-            formdata.set_keywords(skill_, key_, zip_, age_)
 
             if 'formdata' in session:
                 FormData.deleteData(session['formdata'])
