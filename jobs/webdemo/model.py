@@ -98,6 +98,9 @@ class FormData(object):
         sess = Session.query.filter(Session.sessionID==sessionID).first()
         self._keywords = {'skill':sess.skills, 'keyword':sess.keywords,
                 'zipcode':sess.zipcode, 'age':sess.postage}
+        sess.access_timestamp = datetime.datetime.now()
+        db.session.add(sess)
+        db.session.commit()
 
         city_pos_dict = defaultdict(int)
         postdata = (db.session
