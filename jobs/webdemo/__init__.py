@@ -5,13 +5,14 @@
 '''
 
 __title__ = 'jobfeeder_demo'
-__version__ = '0.0.1'
+__version__ = '0.1.1'
 __author__ = 'Hideki Ikeda'
 __licence__ = 'Apache License Version 2.0'
 __copyright__ = 'Copyright 2015 Hideki Ikeda'
 
 
-from main import set_callback, start
+from main import start
+from model import set_callback
 
 
 __all__ = [

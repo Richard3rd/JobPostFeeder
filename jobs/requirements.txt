@@ -1,2 +1,4 @@
 BeautifulSoup4>=4.3
 Flask>=0.10.1
+flask-sqlalchemy
+flask-migrate

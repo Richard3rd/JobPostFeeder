@@ -63,3 +63,6 @@ temp/
 *.swp
 *.swo
 *.swn
+
+# application data
+*.db
