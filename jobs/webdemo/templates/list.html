@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+
+{% block title %}Jobs in {{ city }}{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <ol class="breadcrumb">
+          <li><a href="/">Home</a></li>
+          <li class="active">Jobs in {{ city }}</li>
+        </ol>
+      </div>
+    </div>
+    <div class="row row-content">
+      <div class="col-sm-12">
+        <div id="regions_div" class="center-block"></div>
+      </div>
+    </div>
+    <div class="row row-content">
+      <div class="col-sm-12">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th>Post Date</th>
+            <th>Company</th>
+            <th>Title</th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for data in postData %}
+          <tr>
+            <td>{{ data.postDate }}</td>
+            <td>{{ data.company }}</td>
+            <td><a href="{{ data.postURL }}" target="_blank">{{ data.title }}</a></td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script type='text/javascript'>//<![CDATA[ 
+
+        google.setOnLoadCallback(drawRegionsMap);
+
+        function drawRegionsMap() {
+
+          var data = google.visualization.arrayToDataTable([
+            ['City', 'Positions']
+              ,["{{ city }}", {{ n_pos }}]
+          ]);
+
+            var options = {'region':'US-MA',
+                           'displayMode': 'markers',
+                           'resolution': 'provinces',
+                           'backgroundColor': '#81d4fa',
+            };
+
+          var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+
+          chart.draw(data, options);
+        }
+  //]]>  
+
+  </script>
+{% endblock %}

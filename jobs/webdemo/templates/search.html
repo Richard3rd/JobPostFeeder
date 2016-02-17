@@ -1,5 +1,7 @@
 {% extends "layout.html" %}
 
+{% block title %}Jobs in MA{% endblock %}
+
 {% block content %}
   <div class="container">
     <div class="row row-content">
@@ -76,7 +78,15 @@
           var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
 
           chart.draw(data, options);
+
+	  google.visualization.events.addListener(chart, 'select', function() {
+            var selected = chart.getSelection()[0];
+              if(selected) {
+		window.location.href="list?city="+selected.row;
+              }
+	  });
         }
+
   //]]>  
 
   </script>
