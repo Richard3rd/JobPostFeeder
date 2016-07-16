@@ -88,7 +88,7 @@ def show_jobs():
         return redirect(url_for('show_entries'))
 
     postData = formdata.get_post_in_city(city)
-    print postData
+    print(postData)
 
     return render_template('list.html', city=cities[city]['city'],
             n_pos=cities[city]['n_pos'], postData=postData)

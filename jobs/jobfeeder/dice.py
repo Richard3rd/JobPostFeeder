@@ -4,7 +4,7 @@
 @created Apr 17, 2015
 '''
 
-import urllib
+import urllib.request,urllib.parse,urllib.error
 import json
 from contextlib import closing
 from bs4 import BeautifulSoup
@@ -37,8 +37,8 @@ def _list_arg_to_string(l_str):
     If a string in the list contains spaces, the string will be embraced with
     double quote.
     '''
-    l = [l_str] if isinstance(l_str, basestring) else l_str
-    return ' '.join([urllib.quote(s if s.find(' ')==-1 else '"'+s+'"') for s in l])
+    l = [l_str] if isinstance(l_str, str) else l_str
+    return ' '.join([urllib.parse.quote(s if s.find(' ')==-1 else '"'+s+'"') for s in l])
 
 
 class DiceFeeder(object):
@@ -90,31 +90,31 @@ class DiceFeeder(object):
             params.append(direct_url.format(1))
 
         if areacode is not None:
-            params.append(apreacode_url.format(urllib.quote(areacode)))
+            params.append(apreacode_url.format(urllib.parse.quote(areacode)))
 
         if country is not None:
-            params.append(country_url.format(urllib.quote(country)))
+            params.append(country_url.format(urllib.parse.quote(country)))
 
         if state is not None:
-            params.append(state_url.format(urllib.quote(state)))
+            params.append(state_url.format(urllib.parse.quote(state)))
 
         if skill is not None:
             params.append(skill_url.format(_list_arg_to_string(skill)))
 
         if city is not None:
-            params.append(city_url.format(urllib.quote(city)))
+            params.append(city_url.format(urllib.parse.quote(city)))
 
         if text is not None:
             params.append(text_url.format(_list_arg_to_string(text)))
 
         if ip is not None:
-            params.append(ip_url.format(urllib.quote(ip)))
+            params.append(ip_url.format(urllib.parse.quote(ip)))
 
         if age is not None:
             params.append(age_url.format(age))
 
         if diceid is not None:
-            params.append(diceid_url.format(urllib.quote(diceid)))
+            params.append(diceid_url.format(urllib.parse.quote(diceid)))
 
         if sort is not None:
             if sort=='age':
@@ -139,8 +139,10 @@ class DiceFeeder(object):
         self._next_doc = 0
 
     def _load_next(self):
-        with closing(urllib.urlopen(self._next_url)) as f_dice:
-            self._top_json = json.load(f_dice)
+        with closing(urllib.request.urlopen(self._next_url)) as f_dice:
+            dice_response = f_dice.read().decode('utf-8')
+            # print("f_dice: ", dice_response)
+            self._top_json = json.loads(dice_response)
 
         if 'nextUrl' in self._top_json:
             self._next_url = host_url + self._top_json['nextUrl']
@@ -152,7 +154,7 @@ class DiceFeeder(object):
     def __iter__(self):
         return self
 
-    def next(self):
+    def __next__(self):
         if self._next_doc == self._count:
             raise StopIteration
         if self._next_doc == self._last_doc:
@@ -175,7 +177,7 @@ class DiceFeeder(object):
         '''Get job description from a Dice url'''
         if self._description:
             try:
-                page = urllib.urlopen(url)
+                page = urllib.request.urlopen(url)
                 post = BeautifulSoup(page)
                 page.close()
                 description = post.body.find(property='description')['content']
@@ -188,9 +190,9 @@ class DiceFeeder(object):
 
 if __name__=='__main__':
     feeder=DiceFeeder(text='hadoop', city='01886', age=21, sort='age', sd=True)
-    print feeder._next_url
-    print feeder._count
+    print(feeder._next_url)
+    print(feeder._count)
     for i, post in enumerate(feeder):
-        print i, post
+        print(i, post)
         if i == 9:
             break

@@ -52,5 +52,5 @@ class JobFeeder(object):
 if __name__=='__main__':
     feeder=JobFeeder(text='hadoop', zipcode='02140', age=21, sort='age', sd=True)
     for post in feeder:
-        print post
+        print(post)
 

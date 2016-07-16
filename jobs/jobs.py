@@ -63,4 +63,4 @@ if __name__=='__main__':
                        description=not args.no_description)
 
     for post in feeder:
-        print post
+        print(post)

@@ -82,7 +82,7 @@ class FormData(object):
                     company=data['company'], location=data['location'],
                     postURL=data['posturl'])
             db.session.add(newPost)
-            print '{} {} {}'.format(data['location'], data['postdate'], data['title'])
+            print ('{} {} {}'.format(data['location'], data['postdate'], data['title']))
         db.session.commit()
 
         return sessionID

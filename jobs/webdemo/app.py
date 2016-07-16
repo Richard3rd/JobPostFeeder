@@ -4,12 +4,12 @@ Site main
 @author Hideki Ikeda
 @created Feb 16, 2016
 '''
+import os
 
-from flask import Flask, request, session, g, redirect, url_for, abort, render_template, flash
-from flask.ext.migrate import Migrate, MigrateCommand
-from flask.ext.script import Manager
-from flask.ext.sqlalchemy import SQLAlchemy
-
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_script import Manager
+from flask_migrate import Migrate, MigrateCommand
 
 app = Flask(__name__)
 app.config.from_pyfile('democonfig.py')
