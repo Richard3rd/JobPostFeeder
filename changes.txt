@@ -1,0 +1,33 @@
+changes.txt (this file)
+	list changes made to migrate to Python 3.x
+
+
+.gitignore
+	ignore webdemo/migrations folder -- not sure it is ever used
+
+
+jobs.py
+jobfeeder/jobfeed.py
+webdemo/handler.py
+webdemo/model.py
+	fix print commands -- print is a function in Python 3.x
+
+
+jobfeeder/dice.py
+	fix print commands -- print is a function in Python 3.x
+	fix urllib usage -- urllib split into urllib.request, urllib.parse,
+		and urllib.error in Python 3.x
+	fix use of basestring -- this type does not exist in Python 3.x
+	fix definition of iterator -- now use __iter__() not iter()
+	fix loading of JSON response
+
+
+webdemo/app.py
+	fix the import of Flask extensions -- new package structure
+
+
+webdemo/democonfig.py
+	add a new definition to suppress annoying warning
+	print a couple of logging lines 
+
+
